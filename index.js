@@ -6,24 +6,18 @@ const config = require('./config.json')
 
 const client = new Client({intents: [Intents.FLAGS.GUILDS]})
 
-//region update slashcommands and register commands to client
-const commands = []
+//region register commands to client
 client.commands = new Collection()
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
-for (const file of commandFiles) {
+for (const file of fs.readdirSync('./commands').filter(file => file.endsWith('.js'))) {
     const command = require(`./commands/${file}`)
-    commands.push(command.data.toJSON())
     client.commands.set(command.data.name, command)
 }
-
-const rest = new REST({version : '9'}).setToken(config.token)
-rest.put(Routes.applicationCommands(config.clientId))
 //endregion
 
 
 client.once('ready', () => {
-    console.log('ready')
+    console.log('Ready.')
 });
 
 client.login(config.token)
